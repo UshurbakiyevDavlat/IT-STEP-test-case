@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
@@ -11,48 +11,41 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+
 
 class RegisterController extends Controller
 {
 
-    use RegistersUsers;
-    public function __construct()
-    {
-        $this->middleware('guest', [
-            'except' => 'logout',
-        ]);
-    }
+
+//    public function __construct()
+//    {
+//        $this->middleware('guest', [
+//            'except' => 'logout',
+//        ]);
+//    }
 
     public function register(Request $request): JsonResponse
     {
 
-        $validator = Validator::make($request,[
+        $validator = Validator::make($request->all(),[
             'email' => 'required|email',
-        ],[
-            'email.required'                => trans('auth.emailRequired'),
         ]);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $user = new User();
 
-        $user = User::query()->create(
-            [
-                'email' =>strip_tags($request['email']),
-                'token' =>$this->registered($request, $user)
-            ]
-        );
+        $input = $request->all();
+        $user = User::query()->create($input);
+        $input['api_token'] = $this->registered($request,$user);
+//        $this->initiateEmailActivation($user);
 
-        $this->initiateEmailActivation($user);
-
-//        $success['token'] =$user->token
-//        $success['name'] =  $user->email;
+        $success['token'] = $input['api_token'];
+        $success['name'] =  $user->email;
 
 
 
-        return $this->sendResponse($user, 'User register successfully.');
+        return $this->sendResponse($success, 'User register successfully.');
 
 
     }

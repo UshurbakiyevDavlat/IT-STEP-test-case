@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,4 +25,7 @@ Route::namespace('Auth')->group(function () {
     Route::get('/register', 'LoginController@show_signup_form')->name('register');
     Route::post('/register', 'LoginController@process_signup');
     Route::post('/logout', 'LoginController@logout')->name('logout');
+
+    Route::resource('products', ProductController::class);
+    Route::resource('users', RegisterController::class);
 });

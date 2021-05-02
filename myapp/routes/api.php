@@ -44,7 +44,7 @@ use App\Models\Product;
 //Route::put('products/{id}', 'ProductController@update');
 //Route::delete('products/{id}', 'ProductController@delete');
 
-Route::post('register', 'Auth\RegisterController@register');
+Route::post('register', 'RegisterController@register');
 Route::get('products', 'ProductController@index');
 Route::get('products/{product}', 'ProductController@show');
 Route::post('products', 'ProductController@store');
