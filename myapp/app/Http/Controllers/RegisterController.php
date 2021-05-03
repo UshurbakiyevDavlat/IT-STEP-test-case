@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Mail\FeedbackMail;
 use App\Models\User;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use OAuthProvider;
 
 class RegisterController extends Controller
 {
@@ -44,7 +45,11 @@ class RegisterController extends Controller
         $success['name'] =  $user->email;
 
 
+            $mailBody = new FeedbackMail("Successfully registered!");
+            $mailBody->build();
 
+            $mail = new FeedbackController();
+            $mail->send($mailBody);
         return $this->sendResponse($success, 'User register successfully.');
 
 
@@ -52,7 +57,7 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user): JsonResponse
     {
-        $user->generateToken();
+
 
         return response()->json(['data' => $user->toArray()], 201);
     }

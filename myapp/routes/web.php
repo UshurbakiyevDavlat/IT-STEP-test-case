@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RegisterController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('send-email', 'FeedbackController@send');
+
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Route::namespace('Auth')->group(function () {
-    Route::get('/login', 'LoginController@show_login_form')->name('login');
-    Route::post('/login', 'LoginController@process_login')->name('login');
-    Route::get('/register', 'LoginController@show_signup_form')->name('register');
-    Route::post('/register', 'LoginController@process_signup');
-    Route::post('/logout', 'LoginController@logout')->name('logout');
-
-    Route::resource('products', ProductController::class);
-    Route::resource('users', RegisterController::class);
-});
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');

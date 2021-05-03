@@ -44,6 +44,11 @@ use App\Models\Product;
 //Route::put('products/{id}', 'ProductController@update');
 //Route::delete('products/{id}', 'ProductController@delete');
 
+Route::get('send-email', 'FeedbackController@send');
+Route::post('logout', 'LoginController@logout');
+Route::get('CategoryProd/{cat_id}','ProductController@showProdByCat');
+Route::get('productsAdd/{product}', 'ProductController@add');
+Route::post('login', 'LoginController@authenticate');
 Route::post('register', 'RegisterController@register');
 Route::get('products', 'ProductController@index');
 Route::get('products/{product}', 'ProductController@show');
@@ -51,6 +56,6 @@ Route::post('products', 'ProductController@store');
 Route::put('products/{product}', 'ProductController@update');
 Route::delete('products/{product}', 'ProductController@delete');
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
